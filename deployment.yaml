@@ -15,9 +15,14 @@ spec:
         app: nodejs
     spec:
       containers:
-      - image: myhk2009/nodetest:1
+      - image: myhk2009/nodetest:latest
         name: nodejs
-        resources: {}
+        env:
+          - name: APP_ENV
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: appenv
 status: {}
 ---
 apiVersion: v1
