@@ -15,7 +15,7 @@ spec:
         app: nodejs
     spec:
       containers:
-      - image: myhk2009/nodetest:latest
+      - image: myhk2009/nodetest:1
         name: nodejs
         resources: {}
 status: {}
