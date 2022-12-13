@@ -14,14 +14,15 @@ spec:
       labels:
         app: nodejs
     spec:
+      serviceAccountName: node-deployment-sa
       containers:
-      - image: myhk2009/nodetest:2
+      - image: myhk2009/nodetest:latest
         name: nodejs
         env:
           - name: APP_ENV
             valueFrom:
               secretKeyRef:
-                name: mysecret
+                name: aws-secret
                 key: appenv
 status: {}
 ---
