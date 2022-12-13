@@ -16,7 +16,7 @@ spec:
     spec:
       serviceAccountName: node-deployment-sa
       containers:
-      - image: myhk2009/nodetest:latest
+      - image: myhk2009/nodetest:3
         name: nodejs
         env:
           - name: APP_ENV
