@@ -1,70 +1,56 @@
 # nodejs-manifest
 
-## 1. Jenkins installation 
-	a. Install jenkins in EC2
-		i. Reference: https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/		
-		ii. Install Docker
-		iii. Run ```sudo chmod 666 /var/run/docker.sock``` on the EC2 after Docker is installed.
+### 1. Jenkins installation 
+a. [Install jenkins in EC2](https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
+i. Install Docker
+ii. Run ```sudo chmod 666 /var/run/docker.sock``` on the EC2 after Docker is installed.
 		
-	b. Jenkins plugins
-		- Docker plugin
-		- Docker Pipeline
-		- Locale
+b. Install Jenkins plugins
+	- Docker plugin
+	- Docker Pipeline
+	- Locale
 		
-	c. Config credentials
-		- github
-		- dockerhub
+c. Config credentials
+    - github
+    - dockerhub
 	
 
-## 2. Setup 2 pipelines
-	a. for building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.git)
-	
-		i. use nodejs for Web server
-		
-		ii. init the project
-		
-		iii. create a Dockerfile for building nodejs image
-		
-		```
-			FROM node:16-alpine
-			ENV APP_ENV=dev
+### 2. Setup 2 pipelines
+a. For building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.git)
+i. Use nodejs for Web server
+ii. Init the project
+iii. Create a Dockerfile for building nodejs image
+```
+    FROM node:16-alpine
+	ENV APP_ENV=dev
 
-			WORKDIR /app
+	WORKDIR /app
 
-			COPY ["package.json", "package-lock.json*", "./"]
+	COPY ["package.json", "package-lock.json*", "./"]
 
-			RUN npm install
+	RUN npm install
 
-			COPY . .
+	COPY . .
 
-			CMD [ "node", "app.js" ]
-		```
-		
-		iv. create a jenkinsfile for the pipeline		
-			- create a stage for building image			
-			- after image push to the dockerhub, trigger another pipeline to update k8s manifest
-			
-			```
-			  stage('Trigger ManifestUpdate') {
-						echo "triggering updatemanifestjob"
-						build job: 'UpdateNodeManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-				}
-			```
+	CMD [ "node", "app.js" ]
+```
 	
-	b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nodejs-manifest.git)
+iv. Create a jenkinsfile for the pipeline		
+	- Create a stage for building image			
+	- Trigger another pipeline to update k8s manifest
 	
-		i. update image version in deployment.yaml
-		
-		ii. commit the changes
+	  stage('Trigger ManifestUpdate') {
+				echo "triggering updatemanifestjob"
+				build job: 'UpdateNodeManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+		}
+
 	
-## 3. Setup Argo CD for deployment
-	[Reference](https://www.eksworkshop.com/intermediate/290_argocd/)
+b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nodejs-manifest.git)
+	i. Update image version in deployment.yaml
+	ii. Commit the changes
 	
-	a. setup a EKS cluster using AWS cloudformation
-	
-	b. install Argo CD 
-	
-	c. setup application inside Argo CD for automated deployment 
-	
-		[Reference[(https://argo-cd.readthedocs.io/en/stable/getting_started/#6-create-an-application-from-a-git-repository)
+### 3. Setup Argo CD for deployment
+a. Setup a EKS cluster using AWS cloudformation
+b. [Install Argo CD](https://www.eksworkshop.com/intermediate/290_argocd/)
+c. [Setup application](https://argo-cd.readthedocs.io/en/stable/getting_started/#6-create-an-application-from-a-git-repository) inside Argo CD for automated deployment 
 	
