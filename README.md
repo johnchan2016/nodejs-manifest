@@ -62,4 +62,14 @@ a. Setup a EKS cluster using AWS cloudformation
 b. [Install Argo CD](https://www.eksworkshop.com/intermediate/290_argocd/)
 
 c. [Setup application](https://argo-cd.readthedocs.io/en/stable/getting_started/#6-create-an-application-from-a-git-repository) inside Argo CD for automated deployment 
-	
+
+
+
+### 4. Use of Kustomization for multiple environment
+a. [Install kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+
+b. [Make kustomization folder structure](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
+
+![Kustomize folder structure](/images/kustomize-folder-structure.jpg "Kustomize folder structure")
+
+c. if pods deploy with service account with different namespace with prefix, like 'dev', 'uat', then corresponding service account is created as well.
