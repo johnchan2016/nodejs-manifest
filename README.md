@@ -1,75 +1,86 @@
 # nodejs-manifest
 
+*******
+Tables of contents  
+ 1. [Jenkins installation ](#JenkinsInstallation )
+ 2. [Setup 2 pipelines](#Setup2Pipelines)
+ 3. [Setup Argo CD for deployment](#SetupArgoCDForDeployment)
+ 4. [Use of Kustomization for multiple environment](#UseOfKustomizationForMultipleEnvironment)
+
+*******
+
+<div id='JenkinsInstallation'/>  
+
 ### 1. Jenkins installation 
 a. [Install jenkins in EC2](https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/)
 
-i. Install Docker
-
-ii. Run ```sudo chmod 666 /var/run/docker.sock``` on the EC2 after Docker is installed.
-		
+- Install Docker
+- Run ```sudo chmod 666 /var/run/docker.sock``` on the EC2 after Docker is installed.
+			
 b. Install Jenkins plugins
-	- Docker plugin
-	- Docker Pipeline
-	- Locale
-		
-c. Config credentials
-    - github
-    - dockerhub
 	
+- Docker plugin
+- Docker Pipeline
+- Locale
+			
+c. Config credentials
+	
+- github
+- dockerhub
+	
+<div id='Setup2Pipelines'/>  
 
 ### 2. Setup 2 pipelines
 a. For building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.git)
 
-i. Use nodejs for Web server
+- Use nodejs for Web server
+- Init the project
+- Create a Dockerfile for building nodejs image
+	```
+		FROM node:16-alpine
+		ENV APP_ENV=dev
 
-ii. Init the project
+		WORKDIR /app
 
-iii. Create a Dockerfile for building nodejs image
-```
-    FROM node:16-alpine
-	ENV APP_ENV=dev
+		COPY ["package.json", "package-lock.json*", "./"]
 
-	WORKDIR /app
+		RUN npm install
 
-	COPY ["package.json", "package-lock.json*", "./"]
+		COPY . .
 
-	RUN npm install
-
-	COPY . .
-
-	CMD [ "node", "app.js" ]
-```
+		CMD [ "node", "app.js" ]
+	```
 	
-iv. Create a jenkinsfile for the pipeline		
+- Create a jenkinsfile for the pipeline
+	
 	- Create a stage for building image			
 	- Trigger another pipeline to update k8s manifest
 	
+	```
 	  stage('Trigger ManifestUpdate') {
 				echo "triggering updatemanifestjob"
 				build job: 'UpdateNodeManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
 		}
-
+  ```
 	
 b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nodejs-manifest.git)
 
-	i. Update image version in deployment.yaml
+- Update image version in deployment.yaml
+- Commit the changes
 	
-	ii. Commit the changes
-	
+<div id='SetupArgoCDForDeployment'/>  
+
 ### 3. Setup Argo CD for deployment
-a. Setup a EKS cluster using AWS cloudformation
 
-b. [Install Argo CD](https://www.eksworkshop.com/intermediate/290_argocd/)
+- Setup a EKS cluster using AWS cloudformation
+- [Install Argo CD](https://www.eksworkshop.com/intermediate/290_argocd/)
+- [Setup application](https://argo-cd.readthedocs.io/en/stable/getting_started/#6-create-an-application-from-a-git-repository) inside Argo CD for automated deployment 
 
-c. [Setup application](https://argo-cd.readthedocs.io/en/stable/getting_started/#6-create-an-application-from-a-git-repository) inside Argo CD for automated deployment 
-
-
+<div id='UseOfKustomizationForMultipleEnvironment'/>  
 
 ### 4. Use of Kustomization for multiple environment
-a. [Install kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
 
-b. [Make kustomization folder structure](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
-
-![Kustomize folder structure](/images/kustomize-folder-structure.jpg "Kustomize folder structure")
-
-c. if pods deploy with service account with different namespace with prefix, like 'dev', 'uat', then corresponding service account is created as well.
+- [Install kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+- [Make kustomization folder structure](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)<br/>
+  <img src="./images/kustomize-folder-structure.jpg" width="300" height="300">
+- Corresponding service accounts are required to created if pods deployed with different namespace with prefix, like 'dev', 'uat' using service account
