@@ -57,11 +57,11 @@ a. For building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.
 	- Trigger another pipeline to update k8s manifest
 	
 	```
-	  stage('Trigger ManifestUpdate') {
-				echo "triggering updatemanifestjob"
-				build job: 'UpdateNodeManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-		}
-  ```
+	    stage('Trigger ManifestUpdate') {
+		echo "triggering updatemanifestjob"
+		build job: 'UpdateNodeManifest', parameters: [string(name: 'DOCKERTAG', value: "${IMAGETAG}"), string(name: 'APPENV', value: "${APPENV}")]
+	    }
+  	```
 	
 b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nodejs-manifest.git)
 
