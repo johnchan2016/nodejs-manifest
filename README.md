@@ -65,7 +65,7 @@ a. For building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.
 	
 b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nodejs-manifest.git)
 
-- Update image version in deployment.yaml
+- Update image tag in manifests/overlays/${ENV}/kustomization.yaml
 - Commit the changes
 	
 <div id='SetupArgoCDForDeployment'/>  
@@ -81,6 +81,6 @@ b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nod
 ### 4. Use of Kustomization for multiple environment
 
 - [Install kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
-- [Make kustomization folder structure](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)<br/>
+- [Make kustomization folder structure like below](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)<br/>
   <img src="./images/kustomize-folder-structure.jpg" width="300" height="300">
 - Corresponding service accounts are required to created if pods deployed with different namespace with prefix, like 'dev', 'uat' using service account
