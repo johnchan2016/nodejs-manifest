@@ -68,7 +68,7 @@ b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nod
 - Update image tag in manifests/overlays/${ENV}/kustomization.yaml
 - Commit the changes
 	
-<div id='SetupArgoCDForDeployment'/>
+<div id='SetupArgoCDForDeployment'/> 
 
 ### 3. Setup Argo CD for deployment
 
