@@ -33,6 +33,7 @@ c. Config credentials
 ### 2. Setup 2 pipelines
 a. For building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.git)
 
+- Use a multibranch pipeline 
 - Use nodejs for Web server
 - Init the project
 - Create a Dockerfile for building nodejs image
@@ -65,10 +66,11 @@ a. For building image [nodejs-code](https://github.com/johnchan2016/nodejs-code.
 	
 b. for update k8s manifest [nodejs-manifest](https://github.com/johnchan2016/nodejs-manifest.git)
 
+- Create a pipeline with three string parameters: DOCKERTAG, APPENV, BRANCHNAME
 - Update image tag in manifests/overlays/${ENV}/kustomization.yaml
 - Commit the changes
 	
-<div id='SetupArgoCDForDeployment'/>  
+<div id='SetupArgoCDForDeployment'/> 
 
 ### 3. Setup Argo CD for deployment
 
