@@ -32,6 +32,10 @@ node {
                     cat $yamlPath/kustomization.yaml						
                     rm -r $projectBuildPath
                     """
+
+                    sh "scmVars.GIT_COMMIT: ${scmVars.GIT_COMMIT}"
+                    sh "scmVars.GIT_PREVIOUS_COMMIT: ${scmVars.GIT_PREVIOUS_COMMIT}"
+                    sh "scmVars.GIT_PREVIOUS_SUCCESSFUL_COMMIT: ${scmVars.GIT_PREVIOUS_SUCCESSFUL_COMMIT}"
 										
                     if (scmVars.GIT_COMMIT != scmVars.GIT_PREVIOUS_SUCCESSFUL_COMMIT ){
                         sh "git add ."
