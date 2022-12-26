@@ -6,7 +6,7 @@ commonLabels:
 images:
   - name: myhk2009/nodetest
     newName: myhk2009/nodetest
-    newTag: 20221226-dev-89f2974041
+    newTag: 20221226153524-dev-e34aff0cf9
 bases:
   - ../../base
 patchesStrategicMerge:
