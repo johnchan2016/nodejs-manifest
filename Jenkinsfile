@@ -5,7 +5,7 @@ node {
     def yamlPath = "manifests/overlays/${APPENV}"
 
     stage('Clone repository') {     
-        checkout scm
+        scmVars = checkout scm
     }
 
     stage('Update GIT') {
@@ -33,9 +33,11 @@ node {
                     rm -r $projectBuildPath
                     """
 										
-                    sh "git add ."
-                    sh "git commit -m 'Done by Jenkins Job changemanifest: $DOCKERTAG'"
-                    sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/${projectName}.git HEAD:${BRANCHNAME}"
+                    if (scmVars.GIT_COMMIT != scmVars.GIT_PREVIOUS_SUCCESSFUL_COMMIT ){
+                        sh "git add ."
+                        sh "git commit -m 'Done by Jenkins Job changemanifest: $DOCKERTAG'"
+                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/${projectName}.git HEAD:${BRANCHNAME}"
+                    }
                 }
             }
         }
